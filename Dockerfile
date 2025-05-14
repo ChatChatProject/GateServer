@@ -10,6 +10,7 @@ RUN apt-get update -y -o Acquire::http::proxy="http://127.0.0.1:7890" -o Acquire
     && make -j8 && make install && cd / && rm -rf grpc && apt-get clean && rm -rf /var/lib/apt/lists/* 
 RUN cd / && wget --no-check-certificate https://downloads.mysql.com/archives/get/p/20/file/mysql-connector-c%2B%2B-9.2.0-linux-glibc2.28-x86-64bit.tar.gz \
     && tar -zxvf mysql-connector-c++-9.2.0-linux-glibc2.28-x86-64bit.tar.gz && rm mysql-connector-c++-9.2.0-linux-glibc2.28-x86-64bit.tar.gz
+RUN apt update && apt install -y gdb vim iputils-ping python3 tree
 COPY . /app
 WORKDIR /app
 SHELL ["/bin/bash", "-c"]
@@ -17,8 +18,4 @@ RUN ln -s /usr/local/bin/protoc /usr/bin/protoc \
     && ln -s /usr/local/bin/grpc_cpp_plugin /usr/bin/grpc_cpp_plugin \
     && ldconfig \
     && mkdir -p /usr/include/jdbc/cppconn \
-    && mkdir build && cd build && cmake .. && make -j8 \
-    && make install 
-
-RUN apt update && apt install -y gdb
-RUN apt install -y vim iputils-ping
+    && python3 build.py 
